@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import vertexShader from './shaders/vertexShader.glsl';
+import fragmentShader from './shaders/fragmentShader.glsl';
 
 // size
 const sizes = {
@@ -13,14 +14,22 @@ const canvas = document.querySelector('.webgl');
 // Scene
 const scene = new THREE.Scene();
 
-// Textures
-const textureLoader = new THREE.TextureLoader();
-
 // Geometry
-const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
+// const geometry = new THREE.PlaneGeometry(sizes.width, sizes.height, 32, 32);
+const geometry = new THREE.PlaneGeometry(sizes.width, sizes.height, 32, 32);
 
 // Material
-const material = new THREE.MeshBasicMaterial();
+const material = new THREE.RawShaderMaterial({
+  vertexShader: vertexShader,
+  fragmentShader: fragmentShader,
+  transparent: true,
+  side: THREE.DoubleSide,
+  uniforms: {
+    u_resolution: { value: new THREE.Vector2(sizes.width, sizes.height) },
+    u_time: { value: 0.0 }, // 時間を追加
+    u_noise: { value: 1.0 },
+  },
+});
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material);
@@ -35,6 +44,9 @@ window.addEventListener('resize', () => {
 
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // 画面リサイズ時に解像度の uniform を更新
+  material.uniforms.u_resolution.value.set(sizes.width, sizes.height);
 });
 
 // Camera
@@ -44,12 +56,8 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 );
-camera.position.set(0.25, -0.25, 1);
+camera.position.set(0.25, -0.25, 1); // Adjust camera position as needed
 scene.add(camera);
-
-// Controls
-const controls = new OrbitControls(camera, canvas);
-controls.enableDamping = true;
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -63,7 +71,10 @@ const clock = new THREE.Clock();
 
 const animate = () => {
   const elapsedTime = clock.getElapsedTime();
-  controls.update();
+
+  // シェーダーに経過時間を渡す
+  material.uniforms.u_time.value = elapsedTime;
+
   renderer.render(scene, camera);
   window.requestAnimationFrame(animate);
 };
