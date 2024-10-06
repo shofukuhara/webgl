@@ -15,7 +15,6 @@ const canvas = document.querySelector('.webgl');
 const scene = new THREE.Scene();
 
 // Geometry
-// const geometry = new THREE.PlaneGeometry(sizes.width, sizes.height, 32, 32);
 const geometry = new THREE.PlaneGeometry(sizes.width, sizes.height, 32, 32);
 
 // Material
@@ -35,6 +34,7 @@ const material = new THREE.RawShaderMaterial({
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
+// リサイズ処理
 window.addEventListener('resize', () => {
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
@@ -56,7 +56,8 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 );
-camera.position.set(0.25, -0.25, 1); // Adjust camera position as needed
+// 背景に表示するのでYX軸は0でZ軸は1
+camera.position.set(0, 0, 1);
 scene.add(camera);
 
 // Renderer
@@ -74,7 +75,6 @@ const animate = () => {
 
   // シェーダーに経過時間を渡す
   material.uniforms.u_time.value = elapsedTime;
-
   renderer.render(scene, camera);
   window.requestAnimationFrame(animate);
 };
