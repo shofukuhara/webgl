@@ -7,9 +7,8 @@
     "style:lint": "stylelint \"./src/**/*.scss\" --config ./config/.stylelintrc.json",
     "lint": "npm run style:lint -- --fix",
     "image:min": "node ./config/image.min.mjs",
-    "remove-comments": "node ./config/remove-comments.mjs",
     "dev": "npm run lint && vite --config ./config/vite.config.js && npm run image:min",
-    "build": "npm run lint && vite build --config ./config/vite.config.js && npm run remove-comments"
+    "build": "npm run lint && vite build --config ./config/vite.config.js"
   },
   "devDependencies": {
     "@macropygia/vite-plugin-pug-static": "^0.0.19",
@@ -32,6 +31,7 @@
   },
   "dependencies": {
     "gsap": "^3.12.5",
+    "rollup-plugin-terser": "^7.0.2",
     "swiper": "^8.4.7",
     "three": "^0.169.0",
     "vite-plugin-glsl": "^1.3.0"
