@@ -3,9 +3,9 @@ precision mediump float;
 uniform vec2 u_resolution;  // 画面解像度
 uniform float u_time;       // 経過時間
 
-// 簡単なノイズ生成関数
+// ノイズ生成関数
 float noise(vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453);
+    return fract(sin(dot(st.xy, vec2(15.0000, 78.0000))) * 5000.00000);
 }
 
 // 2Dノイズを生成
@@ -15,7 +15,7 @@ float perlinNoise(vec2 st) {
 
     // ノイズの計算を行う
     float a = noise(i);
-    float b = noise(i + vec2(1.0, .0));
+    float b = noise(i + vec2(1.0, 0.0));
     float c = noise(i + vec2(0.0, 1.0));
     float d = noise(i + vec2(1.0, 1.0));
 
@@ -28,11 +28,11 @@ float perlinNoise(vec2 st) {
 void main() {
     vec2 st = gl_FragCoord.xy / u_resolution;
 
-    // 色の生成（よりコントラストのある色合い）
-    vec3 color1 = vec3(0.0, 0.5, 0.8);
-    vec3 color2 = vec3(0.0, 0.8, 1.0);
-    vec3 color3 = vec3(0.0, 0.502, 1.0);
-    vec3 color4 = vec3(0.1686, 0.0, 1.0);
+    // 青系の色の生成
+    vec3 color1 = vec3(0.0, 0.2, 0.5);    // 濃い青
+    vec3 color2 = vec3(0.0, 0.4, 0.8);    // 中間の青
+    vec3 color3 = vec3(0.098, 0.0, 1.0);    // 明るい青
+    vec3 color4 = vec3(0.1176, 0.0, 1.0);    // シアン系の青
 
     // 各色のノイズを生成し、時間に応じて変化させる
     float n1 = perlinNoise(st * 0.8 + vec2(u_time * 0.5, 0.0)); // 色1
