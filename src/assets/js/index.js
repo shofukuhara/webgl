@@ -17,6 +17,10 @@ const scene = new THREE.Scene();
 // Geometry
 const geometry = new THREE.PlaneGeometry(sizes.width, sizes.height, 32, 32);
 
+// Texture
+const textureLoader = new THREE.TextureLoader();
+const texture = textureLoader.load('../images/image.jpg');
+
 // Material
 const material = new THREE.RawShaderMaterial({
   vertexShader: vertexShader,
@@ -27,6 +31,7 @@ const material = new THREE.RawShaderMaterial({
     u_resolution: { value: new THREE.Vector2(sizes.width, sizes.height) },
     u_time: { value: 0.0 }, // 時間を追加
     u_noise: { value: 1.0 },
+    u_texture: { value: texture },
   },
 });
 
